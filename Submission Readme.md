@@ -47,13 +47,13 @@ This project focuses on:
 
 ### Cloning the Repository
 ```sh
-git clone <repository_url>
-cd <repository_name>
+git clone [<repository_url>](https://github.com/gaurikarkhile001/online_shop.git)
+cd online_shop
 ```
 
 ### Creating a Feature Branch
 ```sh
-git checkout -b feature/chatbot
+git checkout -b gauri
 ```
 
 ### Committing Changes
@@ -64,7 +64,7 @@ git commit -m "Implemented chatbot and fixed admin panel issues"
 
 ### Pushing Changes to GitHub
 ```sh
-git push origin feature/chatbot
+git push origin gauri
 ```
 
 ### Creating a Pull Request (PR)
@@ -116,7 +116,7 @@ CMD ["npm", "start"]
 ### Building and Running the Container
 ```sh
 docker build -t online-shop .
-docker run -p 3000:3000 online-shop
+docker run -p 5173:5173 online-shop
 ```
 
 ### Checking Running Containers
@@ -126,15 +126,14 @@ docker ps
 
 ### Stopping and Removing Containers
 ```sh
-docker stop <container_id>
-docker rm <container_id>
+docker stop final-container
+docker rm final-container
 ```
 
 ---
 
 ## Next Steps
-✅ Deploy the application to **AWS** or **Heroku**.  
-✅ Implement **CI/CD pipelines** for automated deployment.  
+✅ Deploy the application to **AWS**. 
 ✅ Enhance **security and performance optimizations**.  
 
 ---
