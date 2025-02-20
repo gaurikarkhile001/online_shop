@@ -5,8 +5,9 @@ Welcome to my submission for **Hackathon Phase 1**! This repository contains a f
 
 This project focuses on:
 - **Git & GitHub:** Version control, branching, and collaboration.
-- **Linux:** Command-line operations and system administration.
-- **Docker:** Containerization best practices and deployment readiness.
+- **Linux:** Command-line operations, system administration, and security.
+- **Docker:** Multi-stage builds, production-ready containers, and deployment.
+- **Cloud Deployment:** Hosting on AWS EC2 with security best practices.
 
 ---
 
@@ -47,7 +48,7 @@ This project focuses on:
 
 ### Cloning the Repository
 ```sh
-git clone [<repository_url>](https://github.com/gaurikarkhile001/online_shop.git)
+git clone https://github.com/gaurikarkhile001/online_shop.git
 cd online_shop
 ```
 
@@ -75,6 +76,8 @@ git push origin gauri
 ---
 
 ## Linux Commands Used
+
+### Command Line Proficiency
 ```sh
 # Navigate to project directory
 cd /path/to/project
@@ -87,55 +90,125 @@ tail -f /var/log/nginx/access.log
 
 # Run the application locally
 npm start
+
+# Change file permissions
+chmod +x script.sh
+
+# Monitor running processes
+ps aux | grep node
+
+# Check memory usage
+free -h
+
+# List open network ports
+netstat -tulnp
 ```
+
+### System Administration Enhancements
+- **User Permissions:** Ensured secure user access control using `chmod` and `chown`.
+- **Process Monitoring:** Used `top`, `htop`, and `ps` to track application resource consumption.
+- **Automated Scripts:** Implemented Bash scripts to streamline deployment tasks.
+- **Log Management:** Utilized `journalctl` and `logrotate` for effective log handling.
 
 ---
 
 ## Docker Containerization
 
-### Dockerfile
+### Multi-Stage Production-Ready Dockerfile
 ```dockerfile
-# Use Node.js as the base image
-FROM node:18
-
-# Set the working directory
+# Stage 1: Build
+FROM node:18 AS builder
 WORKDIR /app
-
-# Copy package files and install dependencies
 COPY package.json package-lock.json ./
 RUN npm install
-
-# Copy the rest of the application
 COPY . .
+RUN npm run build
 
-# Expose the port and run the app
-EXPOSE 3000
+# Stage 2: Production
+FROM node:18
+WORKDIR /app
+COPY --from=builder /app/build ./build
+COPY package.json package-lock.json ./
+RUN npm install --only=production
+EXPOSE 5173
 CMD ["npm", "start"]
 ```
 
 ### Building and Running the Container
 ```sh
 docker build -t online-shop .
-docker run -p 5173:5173 online-shop
+docker run -p 3000:3000 online-shop
 ```
 
-### Checking Running Containers
+### Managing Containers
 ```sh
+# Check running containers
 docker ps
+
+# Stop a container
+docker stop online-shop
+
+# Remove a container
+docker rm online-shop
 ```
 
-### Stopping and Removing Containers
+---
+
+## Cloud Deployment on AWS EC2
+
+### Steps to Deploy
+1. **Launch an EC2 Instance**
+   - Choose an Ubuntu 22.04 AMI.
+   - Select appropriate instance type (e.g., t2.micro for testing).
+2. **SSH into Instance**
+   ```sh
+   ssh -i key.pem ubuntu@<EC2_PUBLIC_IP>
+   ```
+3. **Install Docker**
+   ```sh
+   sudo apt update && sudo apt install -y docker.io
+   ```
+4. **Run the Application**
+   ```sh
+   docker run -d -p 80:3000 online-shop
+   ```
+5. **Verify Deployment**
+   - Open `http://3.252.146.56:5173/` in a browser.
+
+---
+
+## Security Enhancements
+
+### Firewall Configuration
 ```sh
-docker stop final-container
-docker rm final-container
+# Enable UFW firewall
+sudo ufw enable
+
+# Allow SSH
+sudo ufw allow 22/tcp
+
+# Allow HTTP and HTTPS
+sudo ufw allow 80/tcp
+sudo ufw allow 443/tcp
+
+# Deny all other traffic
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
 ```
+
+### Additional Security Measures
+- **SSL/TLS Encryption:** Set up HTTPS using Let's Encrypt.
+- **Secure Database Access:** Restrict database connections to specific IPs.
+- **Least Privilege Principle:** Use non-root users for running the application.
+- **Regular Security Patching:** Automate updates with `unattended-upgrades`.
 
 ---
 
 ## Next Steps
-✅ Deploy the application to **AWS**. 
-✅ Enhance **security and performance optimizations**.  
+✅ Deploy the application to **AWS**.
+✅ Enhance **security and performance optimizations**.
 
 ---
 
 💡 **Feel free to contribute, suggest improvements, or report any issues!** 🚀
+
