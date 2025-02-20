@@ -26,7 +26,6 @@ By participating in this project, you are expected to uphold our Code of Conduct
 Port: 3000
 ```
 
-
 1. Install dependencies:
 ```bash
 npm install
@@ -133,4 +132,4 @@ git commit -m "feat: add user authentication system"
 
 ## License 📄
 
-By contributing, you agree that your contributions will be licensed under the same MIT License that covers the project. 
+By contributing, you agree that your contributions will be licensed under the same MIT License that covers the project.

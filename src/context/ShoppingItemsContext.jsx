@@ -1,5 +1,5 @@
-﻿import {createContext, useContext, useState, useEffect} from "react";
-import {demoProducts} from "../data/demoProducts";
+﻿import { createContext, useContext, useState, useEffect } from "react";
+import { dbService } from "../services/db";
 
 const ShoppingItemsContext = createContext({});
 
@@ -7,19 +7,18 @@ export function useShoppingItems() {
     return useContext(ShoppingItemsContext);
 }
 
-export function ShoppingItemsProvider({children}) {
+export function ShoppingItemsProvider({ children }) {
     const [products, setProducts] = useState([]);
     const [isLoadingProducts, setIsLoadingProducts] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        // Simulate API loading delay
         const loadProducts = async () => {
             try {
                 setIsLoadingProducts(true);
-                // Simulate network delay
-                await new Promise(resolve => setTimeout(resolve, 1000));
-                setProducts(demoProducts);
+                await dbService.init();
+                const products = await dbService.getAllProducts();
+                setProducts(products);
                 setError(null);
             } catch (err) {
                 setError("Failed to load products");
@@ -34,11 +33,7 @@ export function ShoppingItemsProvider({children}) {
 
     async function addProduct(product) {
         try {
-            const newProduct = {
-                ...product,
-                id: products.length + 1,
-                createdAt: new Date().toISOString()
-            };
+            const newProduct = await dbService.addProduct(product);
             setProducts(prevProducts => [...prevProducts, newProduct]);
             return newProduct;
         } catch (error) {
@@ -49,9 +44,10 @@ export function ShoppingItemsProvider({children}) {
 
     async function updateProduct(id, updatedProduct) {
         try {
+            const updated = await dbService.updateProduct(id, updatedProduct);
             setProducts(prevProducts =>
                 prevProducts.map(product =>
-                    product.id === id ? { ...product, ...updatedProduct } : product
+                    product.id === id ? updated : product
                 )
             );
         } catch (error) {
@@ -62,6 +58,7 @@ export function ShoppingItemsProvider({children}) {
 
     async function deleteProduct(id) {
         try {
+            await dbService.deleteProduct(id);
             setProducts(prevProducts =>
                 prevProducts.filter(product => product.id !== id)
             );

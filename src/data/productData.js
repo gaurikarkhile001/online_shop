@@ -168,4 +168,4 @@ function generateProducts(count = 1000) {
     return products;
 }
 
-export { categories as productCategories, brands as productBrands, generateProducts }; 
+export { categories as productCategories, brands as productBrands, generateProducts };

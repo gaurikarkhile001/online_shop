@@ -3,10 +3,16 @@ import { StoreItem } from "./StoreItem";
 import { Container, Row, Col } from "react-bootstrap";
 import { useState } from "react";
 import { ClipLoader } from "react-spinners";
+import { SearchBar } from "./SearchBar";
 
 export function Store() {
     const { products, isLoadingProducts, error } = useShoppingItems();
     const [searchQuery, setSearchQuery] = useState("");
+    const [filters, setFilters] = useState({
+        category: [],
+        priceRange: { min: '', max: '' },
+        rating: 0
+    });
 
     if (isLoadingProducts) {
         return (
@@ -25,10 +31,15 @@ export function Store() {
         );
     }
 
-    const filteredProducts = products?.filter(product => 
-        !searchQuery || 
-        (product?.name && product.name.toLowerCase().includes((searchQuery || "").toLowerCase()))
-    ) || [];
+    const filteredProducts = products?.filter(product => {
+        const matchesSearchQuery = !searchQuery || product.name.toLowerCase().includes(searchQuery.toLowerCase());
+        const matchesCategory = filters.category.length === 0 || filters.category.includes(product.category);
+        const matchesPriceRange = (!filters.priceRange.min || product.price >= filters.priceRange.min) &&
+                                  (!filters.priceRange.max || product.price <= filters.priceRange.max);
+        const matchesRating = product.rating >= filters.rating;
+
+        return matchesSearchQuery && matchesCategory && matchesPriceRange && matchesRating;
+    }) || [];
 
     if (!products || products.length === 0) {
         return (
@@ -47,17 +58,7 @@ export function Store() {
     return (
         <>
             <Container className="mb-4">
-                <Row className="mb-3">
-                    <Col>
-                        <input
-                            type="text"
-                            className="form-control"
-                            placeholder="Search products..."
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                        />
-                    </Col>
-                </Row>
+                <SearchBar onSearch={setSearchQuery} onFilter={setFilters} />
                 <Row md={2} xs={1} lg={3} className="g-3">
                     {filteredProducts.map(item => (
                         <Col key={item.id || Math.random()}>
@@ -73,4 +74,4 @@ export function Store() {
             </Container>
         </>
     );
-} 
+}

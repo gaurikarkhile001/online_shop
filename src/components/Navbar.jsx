@@ -10,6 +10,8 @@ import { faUser } from "@fortawesome/free-solid-svg-icons";
 export function Navbar() {
     const { openCart, cartQuantity } = useShoppingCart();
 
+    
+
     return (
         <nav className="navbar sticky-top">
             <Container className="d-flex justify-content-between align-items-center">
@@ -53,6 +55,7 @@ export function Navbar() {
                             {cartQuantity > 0 && (
                                 <span className="cart-count">{cartQuantity}</span>
                             )}
+
                         </button>
                     </div>
                 </div>

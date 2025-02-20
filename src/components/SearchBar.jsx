@@ -17,8 +17,7 @@ export function SearchBar({ onSearch, onFilter }) {
     const categories = [
         'Smartphones',
         'Laptops',
-        'PC Accessories',
-        'Smartphone Accessories',
+        'Accessories',
         'Audio',
         'Gaming',
         'Wearables'
@@ -63,7 +62,11 @@ export function SearchBar({ onSearch, onFilter }) {
             rating: 0,
             priceRange: { min: '', max: '' }
         });
-        onFilter(null);
+        onFilter({
+            category: [],
+            priceRange: { min: '', max: '' },
+            rating: 0
+        });
     };
 
     return (
@@ -184,4 +187,4 @@ export function SearchBar({ onSearch, onFilter }) {
             </Modal>
         </>
     );
-} 
+}

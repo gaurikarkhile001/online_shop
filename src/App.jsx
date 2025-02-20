@@ -4,6 +4,7 @@ import { Navbar } from "./components/Navbar";
 import Store from "./pages/Store";
 import { ShoppingCartProvider } from "./context/ShoppingCartContext";
 import { ShoppingItemsProvider } from "./context/ShoppingItemsContext";
+import { ShoppingCart } from "./components/ShoppingCart";
 import { ThemeProvider } from "./context/ThemeContext";
 import { Footer } from "./components/Footer";
 import Admin from "./pages/Admin";
@@ -17,6 +18,7 @@ export default function App() {
         <ThemeProvider>
             <ShoppingItemsProvider>
                 <ShoppingCartProvider>
+                    <ShoppingCart />
                     <div className="d-flex flex-column min-vh-100">
                         <Navbar />
                         <Container className="mb-4 flex-grow-1">

@@ -1,4 +1,4 @@
-import { sampleProducts } from '../data/sampleProducts.js';
+import { generateProducts } from '../data/productData.js';
 
 const DB_NAME = 'shopDB';
 const STORE_NAME = 'products';
@@ -30,9 +30,10 @@ function openDB() {
                 store.createIndex('name', 'name', { unique: false });
                 store.createIndex('price', 'price', { unique: false });
 
-                // Add sample products
+                // Add generated products
                 const productStore = request.transaction.objectStore(STORE_NAME);
-                sampleProducts.forEach(product => {
+                const products = generateProducts(1000); // Generate 1000 products
+                products.forEach(product => {
                     productStore.add(product);
                 });
             }
@@ -53,6 +54,23 @@ export const dbService = {
             const transaction = db.transaction(STORE_NAME, 'readonly');
             const store = transaction.objectStore(STORE_NAME);
             const request = store.getAll();
+
+            request.onsuccess = () => {
+                resolve(request.result);
+            };
+
+            request.onerror = () => {
+                reject(request.error);
+            };
+        });
+    },
+
+    async getProductById(id) {
+        await this.init();
+        return new Promise((resolve, reject) => {
+            const transaction = db.transaction(STORE_NAME, 'readonly');
+            const store = transaction.objectStore(STORE_NAME);
+            const request = store.get(Number(id));
 
             request.onsuccess = () => {
                 resolve(request.result);
@@ -114,4 +132,4 @@ export const dbService = {
             };
         });
     }
-}; 
+};

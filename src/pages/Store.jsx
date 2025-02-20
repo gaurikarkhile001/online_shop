@@ -7,7 +7,11 @@ import { useState, useMemo } from "react";
 export default function Store() {
     const { products, isLoadingProducts } = useShoppingItems();
     const [searchQuery, setSearchQuery] = useState("");
-    const [activeFilters, setActiveFilters] = useState(null);
+    const [activeFilters, setActiveFilters] = useState({
+        category: [],
+        priceRange: { min: '', max: '' },
+        rating: 0
+    });
     const [visibleProducts, setVisibleProducts] = useState(20);
 
     const filteredProducts = useMemo(() => {
@@ -26,7 +30,7 @@ export default function Store() {
         if (activeFilters) {
             if (activeFilters.category.length > 0) {
                 filtered = filtered.filter(product =>
-                    activeFilters.category.includes(product.category)
+                    product.category && activeFilters.category.some(category => product.category.includes(category))
                 );
             }
 
@@ -82,7 +86,7 @@ export default function Store() {
             </Row>
             
             <div className="load-more-section">
-                {filteredProducts.length === 0 && (searchQuery || activeFilters) ? (
+                {filteredProducts.length === 0 && (searchQuery || activeFilters.category.length > 0 || activeFilters.priceRange.min || activeFilters.priceRange.max || activeFilters.rating > 0) ? (
                     <div className="text-center">
                         <h3>No products found</h3>
                         <p>Try adjusting your search criteria or filters</p>
