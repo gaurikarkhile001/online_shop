@@ -10,6 +10,7 @@ import Admin from "./pages/Admin";
 import Checkout from "./pages/Checkout";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Chatbot } from "./components/Chatbot";
 
 export default function App() {
     return (
@@ -26,6 +27,7 @@ export default function App() {
                             </Routes>
                         </Container>
                         <Footer />
+                        <Chatbot /> {/* Render Chatbot component here */}
                         <ToastContainer 
                             position="top-right"
                             autoClose={3000}
