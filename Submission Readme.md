@@ -1,5 +1,8 @@
 # Online Shop – Hackathon Phase 1 Submission
 
+# Deployed Link : http://3.252.146.56:5173/
+# Docker Hub : https://hub.docker.com/u/gaurikarkhile
+
 ## Overview
 Welcome to my submission for **Hackathon Phase 1**! This repository contains a fully functional e-commerce application, demonstrating foundational **DevOps** skills in **Git & GitHub, Linux, and Docker**.
 
