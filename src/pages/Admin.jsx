@@ -1,4 +1,4 @@
-﻿import { Container, Row, Col, Button } from "react-bootstrap";
+﻿import { Container, Row, Col, Button, Modal } from "react-bootstrap";
 import { useState } from "react";
 import { useShoppingItems } from "../context/ShoppingItemsContext";
 import { formatCurrency } from "../utilities/formatCurrency";
@@ -12,6 +12,8 @@ export default function Admin() {
     price: "",
     imgUrl: "",
   });
+  const [editingProduct, setEditingProduct] = useState(null);
+  const [showEditModal, setShowEditModal] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,6 +32,43 @@ export default function Admin() {
         position: "top-right",
         theme: "dark",
       });
+    }
+  };
+
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    try {
+      await updateProduct(editingProduct.id, {
+        ...editingProduct,
+        price: parseFloat(editingProduct.price),
+      });
+      setShowEditModal(false);
+      toast.success("Product updated successfully!", {
+        position: "top-right",
+        theme: "dark",
+      });
+    } catch (error) {
+      toast.error("Failed to update product. Please try again.", {
+        position: "top-right",
+        theme: "dark",
+      });
+    }
+  };
+
+  const handleDelete = async (productId) => {
+    if (window.confirm("Are you sure you want to delete this product?")) {
+      try {
+        await deleteProduct(productId);
+        toast.success("Product deleted successfully!", {
+          position: "top-right",
+          theme: "dark",
+        });
+      } catch (error) {
+        toast.error("Failed to delete product. Please try again.", {
+          position: "top-right",
+          theme: "dark",
+        });
+      }
     }
   };
 
@@ -105,13 +144,16 @@ export default function Admin() {
                 <div className="d-flex gap-2 mt-3">
                   <Button
                     className="btn-outline flex-grow-1"
-                    onClick={() => updateProduct(product.id)}
+                    onClick={() => {
+                      setEditingProduct(product);
+                      setShowEditModal(true);
+                    }}
                   >
                     Update
                   </Button>
                   <Button
                     className="btn-outline btn-danger flex-grow-1"
-                    onClick={() => deleteProduct(product.id)}
+                    onClick={() => handleDelete(product.id)}
                   >
                     Delete
                   </Button>
@@ -121,6 +163,61 @@ export default function Admin() {
           </Col>
         ))}
       </Row>
+
+      <Modal show={showEditModal} onHide={() => setShowEditModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Edit Product</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <form onSubmit={handleUpdate}>
+            <div className="mb-3">
+              <label className="form-label">Product Name</label>
+              <input
+                type="text"
+                className="form-control"
+                value={editingProduct?.name || ""}
+                onChange={(e) =>
+                  setEditingProduct({ ...editingProduct, name: e.target.value })
+                }
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <label className="form-label">Price</label>
+              <input
+                type="number"
+                step="0.01"
+                className="form-control"
+                value={editingProduct?.price || ""}
+                onChange={(e) =>
+                  setEditingProduct({ ...editingProduct, price: e.target.value })
+                }
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <label className="form-label">Image URL</label>
+              <input
+                type="url"
+                className="form-control"
+                value={editingProduct?.imgUrl || ""}
+                onChange={(e) =>
+                  setEditingProduct({ ...editingProduct, imgUrl: e.target.value })
+                }
+                required
+              />
+            </div>
+            <div className="d-flex justify-content-end gap-2">
+              <Button variant="secondary" onClick={() => setShowEditModal(false)}>
+                Cancel
+              </Button>
+              <Button type="submit" variant="primary">
+                Save Changes
+              </Button>
+            </div>
+          </form>
+        </Modal.Body>
+      </Modal>
     </Container>
   );
 }

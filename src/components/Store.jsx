@@ -32,10 +32,13 @@ export function Store() {
     }
 
     const filteredProducts = products?.filter(product => {
-        const matchesSearchQuery = !searchQuery || product.name.toLowerCase().includes(searchQuery.toLowerCase());
-        const matchesCategory = filters.category.length === 0 || filters.category.includes(product.category);
-        const matchesPriceRange = (!filters.priceRange.min || product.price >= filters.priceRange.min) &&
-                                  (!filters.priceRange.max || product.price <= filters.priceRange.max);
+        const matchesSearchQuery = !searchQuery || 
+            product.name.toLowerCase().includes(searchQuery.toLowerCase());
+        // Updated category matching logic
+        const matchesCategory = filters.category.length === 0 || 
+            filters.category.includes(product.category);
+        const matchesPriceRange = (!filters.priceRange.min || product.price >= Number(filters.priceRange.min)) &&
+                                 (!filters.priceRange.max || product.price <= Number(filters.priceRange.max));
         const matchesRating = product.rating >= filters.rating;
 
         return matchesSearchQuery && matchesCategory && matchesPriceRange && matchesRating;

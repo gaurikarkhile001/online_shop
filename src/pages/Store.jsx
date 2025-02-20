@@ -30,7 +30,7 @@ export default function Store() {
         if (activeFilters) {
             if (activeFilters.category.length > 0) {
                 filtered = filtered.filter(product =>
-                    product.category && activeFilters.category.some(category => product.category.includes(category))
+                    activeFilters.category.includes(product.category)
                 );
             }
 

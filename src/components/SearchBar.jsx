@@ -34,6 +34,13 @@ export function SearchBar({ onSearch, onFilter }) {
         onSearch('');
     };
 
+    const setFilter = (type, value) => {
+        setFilters(prev => ({
+            ...prev,
+            [type]: value
+        }));
+    };
+
     const handleFilterChange = (type, value) => {
         setFilters(prev => ({
             ...prev,
@@ -42,12 +49,20 @@ export function SearchBar({ onSearch, onFilter }) {
     };
 
     const handleCategoryChange = (category) => {
+        const updatedCategories = filters.category.includes(category)
+            ? filters.category.filter(c => c !== category)
+            : [...filters.category, category];
+        
         setFilters(prev => ({
             ...prev,
-            category: prev.category.includes(category)
-                ? prev.category.filter(c => c !== category)
-                : [...prev.category, category]
+            category: updatedCategories
         }));
+        
+        // Apply filters immediately when category changes
+        onFilter({
+            ...filters,
+            category: updatedCategories
+        });
     };
 
     const applyFilters = () => {
